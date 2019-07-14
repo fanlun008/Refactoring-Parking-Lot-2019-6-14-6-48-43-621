@@ -18,12 +18,6 @@ public class ParkingBoy {
         this.parkList = parkList;
     }
 
-//    public String canPark(Car car, Park park) {
-//        if (this.park.getCarList().size() < 10) {
-//            return "OK";
-//        }
-//        return "FULL";
-//    }
     public String canPark(Car car) {
         if (findWhichParkCanPark() != null) {
             return "OK";

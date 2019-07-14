@@ -19,13 +19,6 @@ public class StoryoneTest {
 
     @Test
     public void AC1_should_getCar_when_giveTicket(){
-//        Car car = new Car("onepunch");
-//        Customer customer = new Customer(car);
-//        Park park = new Park();
-//        ParkingBoy parkingBoy = new ParkingBoy(park);
-//        Ticket oneTicket = new Ticket();
-//        customer.setTicket(oneTicket);
-//        Car pickCar = parkingBoy.servePick(customer);
 
         Ticket ticket = new Ticket("AAA", "carId", true);
         Park park = new Park();
