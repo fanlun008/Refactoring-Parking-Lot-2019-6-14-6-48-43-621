@@ -23,6 +23,9 @@ public class Customer {
         this.cusId = cusId;
         this.car = car;
         this.car.setCustomerId(this.cusId);
+        if (car.getCarId() == null){
+            car.setCarId(cusId + "_car");
+        }
     }
 
     public Customer(Car car) {

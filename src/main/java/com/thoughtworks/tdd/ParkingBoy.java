@@ -11,10 +11,19 @@ import java.util.UUID;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class ParkingBoy {
-//    private Park park;
+    private String id;
     private List<Park> parkList;
 
+    public ParkingBoy(String id) {
+        this.id = id;
+    }
+
     public ParkingBoy(List<Park> parkList) {
+        this.parkList = parkList;
+    }
+
+    public ParkingBoy(String id, List<Park> parkList) {
+        this.id = id;
         this.parkList = parkList;
     }
 
@@ -27,41 +36,20 @@ public class ParkingBoy {
 
     public Ticket parkAction(Car car, Park park) {
 //        park.getCarList().add(car);
-        Ticket ticket = new Ticket(UUID.randomUUID().toString().substring(0,5), car.getCarId(), true);
+        Ticket ticket = new Ticket(UUID.randomUUID().toString().substring(0, 5), car.getCarId(), true);
         park.getCarList().put(ticket.getTicketId(), car);
         return ticket;
-    }
-
-    public String canPick(Ticket ticket) {
-        if (ticket != null && ticket.isValid()) {
-            if (findWhichParkCanPick(ticket) == null) {
-                return "Unrecognized_ticket";
-            }
-            return "OK";
-        } else if (ticket == null) {
-            return "No_Ticket";
-        } else if (!ticket.isValid()){
-            return "Unrecognized_ticket";
-        }
-        return "NO_FOUND";
     }
 
     public Park findWhichParkCanPick(Ticket ticket) {
         for (Park park : this.parkList) {
             if (park.getCarList().get(ticket.getTicketId()) == null) {
                 continue;
-            }else{
+            } else {
                 return park;
             }
         }
         return null;
-    }
-
-
-    public Car pickByTicket(Ticket ticket) {
-        Park whichParkCanPick = findWhichParkCanPick(ticket);
-        Car car = whichParkCanPick.getCarList().get(ticket.getTicketId());
-        return car;
     }
 
     public Ticket servePark(Customer customer) {
@@ -77,15 +65,29 @@ public class ParkingBoy {
         return ticket;
     }
 
-    public Park findWhichParkCanPark(){
+    public Park findWhichParkCanPark() {
         for (Park park : this.parkList) {
             if (park.getCarList().size() >= 10) {
                 continue;
-            } else{
+            } else {
                 return park;
             }
         }
         return null;
+    }
+
+    public String canPick(Ticket ticket) {
+        if (ticket != null && ticket.isValid()) {
+            if (findWhichParkCanPick(ticket) == null) {
+                return "Unrecognized_ticket";
+            }
+            return "OK";
+        } else if (ticket == null) {
+            return "No_Ticket";
+        } else if (!ticket.isValid()) {
+            return "Unrecognized_ticket";
+        }
+        return "NO_FOUND";
     }
 
     public Car servePick(Customer customer) {
@@ -94,11 +96,17 @@ public class ParkingBoy {
         if (pickMsg == "OK") {
             car = pickByTicket(customer.getTicket());
             customer.getTicket().setValid(false);
-        } else if (pickMsg == "Unrecognized_ticket"){
+        } else if (pickMsg == "Unrecognized_ticket") {
             customer.setServerMsg("Unrecognized parking ticket.");
         } else if (pickMsg == "No_Ticket") {
             customer.setServerMsg("Please provide your parking ticket.");
         }
+        return car;
+    }
+
+    public Car pickByTicket(Ticket ticket) {
+        Park whichParkCanPick = findWhichParkCanPick(ticket);
+        Car car = whichParkCanPick.getCarList().get(ticket.getTicketId());
         return car;
     }
 }

@@ -15,8 +15,14 @@ public class Park {
     private String packId;
     private Integer maxSize = 10;
 
+    private Manager manager;
+
     public Park(Integer maxSize) {
         this.maxSize = maxSize;
+    }
+
+    public Park(Manager manager) {
+        this.manager = manager;
     }
 
     //    private List<Car> carList = new ArrayList<>();

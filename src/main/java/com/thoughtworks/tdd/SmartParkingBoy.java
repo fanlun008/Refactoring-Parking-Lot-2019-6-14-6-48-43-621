@@ -4,6 +4,9 @@ import java.util.List;
 
 public class SmartParkingBoy extends ParkingBoy {
 
+    public SmartParkingBoy(String id, List<Park> parkList) {
+        super(id, parkList);
+    }
 
     public SmartParkingBoy(List<Park> parkList) {
         super(parkList);
