@@ -11,6 +11,11 @@ public class Customer {
     private Car car;
     private String serverMsg;
 
+    public void setServerMsg(String serverMsg) {
+        this.serverMsg = serverMsg;
+        System.out.println(serverMsg);
+    }
+
     public Customer() {
     }
 

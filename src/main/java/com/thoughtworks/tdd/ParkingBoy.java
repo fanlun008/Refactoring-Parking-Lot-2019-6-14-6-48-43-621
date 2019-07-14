@@ -33,8 +33,13 @@ public class ParkingBoy {
 
     public String canPick(Ticket ticket) {
         if (ticket != null && ticket.isValid()) {
+            if (this.park.getCarList().get(ticket.getTicketId()) == null) {
+                return "Unrecognized_ticket";
+            }
             return "OK";
-        } else if (ticket == null || !ticket.isValid()){
+        } else if (ticket == null) {
+            return "No_Ticket";
+        } else if (!ticket.isValid()){
             return "Unrecognized_ticket";
         }
         return "NO_FOUND";
@@ -46,15 +51,15 @@ public class ParkingBoy {
     }
 
     public Ticket servePark(Customer customer) {
-
-        if (canPark(customer.getCar(), this.park) == "OK") {
-            Ticket ticket = parkAction(customer.getCar(), this.park);
+        String parkMsg = canPark(customer.getCar(), this.park);
+        Ticket ticket = null;
+        if (parkMsg == "OK") {
+            ticket = parkAction(customer.getCar(), this.park);
             customer.setTicket(ticket);
-            return ticket;
-        } else {
-            return null;
+        } else if (parkMsg == "FULL") {
+            customer.setServerMsg("Not enough position.");
         }
-
+        return ticket;
     }
 
     public Car servePick(Customer customer) {
@@ -65,7 +70,8 @@ public class ParkingBoy {
             customer.getTicket().setValid(false);
         } else if (pickMsg == "Unrecognized_ticket"){
             customer.setServerMsg("Unrecognized parking ticket.");
-            System.out.println("Unrecognized parking ticket.");
+        } else if (pickMsg == "No_Ticket") {
+            customer.setServerMsg("Please provide your parking ticket.");
         }
         return car;
     }
