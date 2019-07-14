@@ -67,7 +67,7 @@ public class ParkingBoy {
 
     public Park findWhichParkCanPark() {
         for (Park park : this.parkList) {
-            if (park.getCarList().size() >= 10) {
+            if (park.getCarList().size() >= park.getMaxSize()) {
                 continue;
             } else {
                 return park;
