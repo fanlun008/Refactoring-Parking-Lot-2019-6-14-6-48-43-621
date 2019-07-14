@@ -11,14 +11,21 @@ import java.util.UUID;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class ParkingBoy {
-    private Park park;
+//    private Park park;
+    private List<Park> parkList;
 
-    public ParkingBoy(Park park) {
-        this.park = park;
+    public ParkingBoy(List<Park> parkList) {
+        this.parkList = parkList;
     }
 
-    public String canPark(Car car, Park park) {
-        if (this.park.getCarList().size() < 10) {
+//    public String canPark(Car car, Park park) {
+//        if (this.park.getCarList().size() < 10) {
+//            return "OK";
+//        }
+//        return "FULL";
+//    }
+    public String canPark(Car car) {
+        if (findWhichParkCanPark() != null) {
             return "OK";
         }
         return "FULL";
@@ -33,7 +40,7 @@ public class ParkingBoy {
 
     public String canPick(Ticket ticket) {
         if (ticket != null && ticket.isValid()) {
-            if (this.park.getCarList().get(ticket.getTicketId()) == null) {
+            if (findWhichParkCanPick(ticket) == null) {
                 return "Unrecognized_ticket";
             }
             return "OK";
@@ -45,21 +52,46 @@ public class ParkingBoy {
         return "NO_FOUND";
     }
 
+    public Park findWhichParkCanPick(Ticket ticket) {
+        for (Park park : this.parkList) {
+            if (park.getCarList().get(ticket.getTicketId()) == null) {
+                continue;
+            }else{
+                return park;
+            }
+        }
+        return null;
+    }
+
+
     public Car pickByTicket(Ticket ticket) {
-        Car car = this.park.getCarList().get(ticket.getTicketId());
+        Park whichParkCanPick = findWhichParkCanPick(ticket);
+        Car car = whichParkCanPick.getCarList().get(ticket.getTicketId());
         return car;
     }
 
     public Ticket servePark(Customer customer) {
-        String parkMsg = canPark(customer.getCar(), this.park);
+        String parkMsg = canPark(customer.getCar());
         Ticket ticket = null;
         if (parkMsg == "OK") {
-            ticket = parkAction(customer.getCar(), this.park);
+            Park findWhichPark = findWhichParkCanPark();
+            ticket = parkAction(customer.getCar(), findWhichPark);
             customer.setTicket(ticket);
         } else if (parkMsg == "FULL") {
             customer.setServerMsg("Not enough position.");
         }
         return ticket;
+    }
+
+    public Park findWhichParkCanPark(){
+        for (Park park : this.parkList) {
+            if (park.getCarList().size() >= 10) {
+                continue;
+            } else{
+                return park;
+            }
+        }
+        return null;
     }
 
     public Car servePick(Customer customer) {

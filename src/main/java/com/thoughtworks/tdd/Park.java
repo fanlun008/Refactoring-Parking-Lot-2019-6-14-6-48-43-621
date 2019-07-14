@@ -12,6 +12,7 @@ import java.util.Map;
 @Data
 @Accessors(chain = true)
 public class Park {
+    private String packId;
 
 //    private List<Car> carList = new ArrayList<>();
     private Map<String, Car> carList = new LinkedHashMap<>();
