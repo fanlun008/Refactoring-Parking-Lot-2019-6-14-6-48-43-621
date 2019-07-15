@@ -10,13 +10,9 @@ public class SimpleParkingBoy extends ParkingAttendant{
 
     @Override
     public Park findWhichParkCanPark() {
-        for (Park park : getParkList()) {
-            if (park.getCarList().size() >= park.getMaxSize()) {
-                continue;
-            } else {
-                return park;
-            }
-        }
-        return null;
+        Park park1 = getParkList().stream()
+                .filter((park -> park.getCarList().size() < park.getMaxSize()))
+                .findFirst().get();
+        return park1;
     }
 }
