@@ -27,15 +27,7 @@ public class ParkingBoy {
         this.parkList = parkList;
     }
 
-    public String canPark(Car car) {
-        if (findWhichParkCanPark() != null) {
-            return "OK";
-        }
-        return "FULL";
-    }
-
     public Ticket parkAction(Car car, Park park) {
-//        park.getCarList().add(car);
         Ticket ticket = new Ticket(UUID.randomUUID().toString().substring(0, 5), car.getCarId(), true);
         park.getCarList().put(ticket.getTicketId(), car);
         return ticket;
@@ -52,15 +44,22 @@ public class ParkingBoy {
         return null;
     }
 
+    public ServeMessage canPark(Car car) {
+        if (findWhichParkCanPark() != null) {
+            return ServeMessage.OK;
+        }
+        return ServeMessage.FULL;
+    }
+
     public Ticket servePark(Customer customer) {
-        String parkMsg = canPark(customer.getCar());
+        ServeMessage parkMsg = canPark(customer.getCar());
         Ticket ticket = null;
-        if (parkMsg == "OK") {
+        if (parkMsg == ServeMessage.OK) {
             Park findWhichPark = findWhichParkCanPark();
             ticket = parkAction(customer.getCar(), findWhichPark);
             customer.setTicket(ticket);
-        } else if (parkMsg == "FULL") {
-            customer.setServerMsg("Not enough position.");
+        } else if (parkMsg == ServeMessage.FULL) {
+            customer.setServerMsg(ServeMessage.FULL.getValue());
         }
         return ticket;
     }
@@ -76,30 +75,30 @@ public class ParkingBoy {
         return null;
     }
 
-    public String canPick(Ticket ticket) {
+    public ServeMessage canPick(Ticket ticket) {
         if (ticket != null && ticket.isValid()) {
             if (findWhichParkCanPick(ticket) == null) {
-                return "Unrecognized_ticket";
+                return ServeMessage.UNRECOGNIZED_TICKET;
             }
-            return "OK";
+            return ServeMessage.OK;
         } else if (ticket == null) {
-            return "No_Ticket";
+            return ServeMessage.NO_PROVIDED_TICKET;
         } else if (!ticket.isValid()) {
-            return "Unrecognized_ticket";
+            return ServeMessage.UNRECOGNIZED_TICKET;
         }
-        return "NO_FOUND";
+        return ServeMessage.NO_FOUND;
     }
 
     public Car servePick(Customer customer) {
-        String pickMsg = canPick(customer.getTicket());
+        ServeMessage pickMsg = canPick(customer.getTicket());
         Car car = null;
-        if (pickMsg == "OK") {
+        if (pickMsg == ServeMessage.OK) {
             car = pickByTicket(customer.getTicket());
             customer.getTicket().setValid(false);
-        } else if (pickMsg == "Unrecognized_ticket") {
-            customer.setServerMsg("Unrecognized parking ticket.");
-        } else if (pickMsg == "No_Ticket") {
-            customer.setServerMsg("Please provide your parking ticket.");
+        } else if (pickMsg == ServeMessage.UNRECOGNIZED_TICKET) {
+            customer.setServerMsg(ServeMessage.UNRECOGNIZED_TICKET.getValue());
+        } else if (pickMsg == ServeMessage.NO_PROVIDED_TICKET) {
+            customer.setServerMsg(ServeMessage.NO_PROVIDED_TICKET.getValue());
         }
         return car;
     }
