@@ -90,6 +90,7 @@ public abstract class ParkingAttendant {
     public Car pickByTicket(Ticket ticket) {
         Park whichParkCanPick = findWhichParkCanPick(ticket);
         Car car = whichParkCanPick.getCarList().get(ticket.getTicketId());
+        whichParkCanPick.getCarList().remove(ticket.getTicketId());
         return car;
     }
 

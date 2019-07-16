@@ -45,6 +45,8 @@ public class SimpleParkingBoyTest {
         }
         Customer bill = new Customer("Bill", new Car("Bill's car"));
         Ticket ticket = parkingBoy.servePark(bill);
+        Car car = parkingBoy.servePick(bill);
+        Assertions.assertEquals(bill.getCar(), car);
         Assertions.assertEquals(3, park2.getCarList().size());
     }
 }
